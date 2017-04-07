@@ -261,9 +261,11 @@ test_X <- model.matrix(model_formula, data = test)[, -1]
 
 # Get predictions using what you think was the best method:
 predictions <- model_lasso %>%
-  predict(newx=test_X, s=lambda_star_LASSO)
+  predict(newx=test_X, s=lambda_star_LASSO) %>%
+
 
 # Write submissions to CSV
 sample_submission %>% 
   mutate(SalePrice = as.vector(predictions)) %>% 
+  mutate(SalePrice = ifelse(SalePrice < 0, mean(SalePrice), SalePrice)) %>%
   write_csv("PS06_Connor_McCormick_submission.csv")
